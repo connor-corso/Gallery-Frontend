@@ -3,6 +3,8 @@ import { Box, Typography, Grid, Button } from '@mui/material';
 import PhotoCard from './PhotoCard';
 import UploadPictures from './UploadForm';
 
+
+
 const PhotoGallery = () => {
     const [pageNumber, setPageNumber] = useState(0);
     const [photoInfos, setPhotoInfos] = useState([]);
@@ -32,7 +34,12 @@ const PhotoGallery = () => {
     }, [pageNumber]);
     return (
         <Box>
-            <UploadPictures/>
+            <UploadPictures />
+            <Box>
+                <Button onClick={decreasePageNumber} disabled={pageNumber === 0} variant="contained" component="a">-</Button>
+                <Typography>Page: {pageNumber + 1}</Typography>
+                <Button onClick={increasePageNumber} variant="contained" component="a">+</Button>
+            </Box>
 
             <Grid container
                 spacing={{ xs: 1, md: 4 }}
@@ -45,11 +52,6 @@ const PhotoGallery = () => {
                     </Grid>
                 ))}
             </Grid>
-            <Box>
-                <Button onClick={decreasePageNumber} disabled={pageNumber === 0} variant="contained" component="a">-</Button>
-                <Typography>Page: {pageNumber + 1}</Typography>
-                <Button onClick={increasePageNumber} variant="contained" component="a">+</Button>
-            </Box>
         </Box>
     )
 }
