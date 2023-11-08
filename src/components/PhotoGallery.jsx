@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid } from '@mui/material';
+import { Box, Typography, Grid, Button } from '@mui/material';
 import PhotoCard from './PhotoCard';
-
+import UploadPictures from './UploadForm';
 
 const PhotoGallery = () => {
     const [pageNumber, setPageNumber] = useState(0);
     const [photoInfos, setPhotoInfos] = useState([]);
 
+    const increasePageNumber = () => {
+        setPageNumber((prevPageNumber) => prevPageNumber + 1)
+    }
+    const decreasePageNumber = () => {
+        setPageNumber((prevPageNumber) => Math.max(prevPageNumber - 1, 0))
+    }
+
     useEffect(() => {
-        fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=30&page=' + pageNumber)
+        console.log(pageNumber)
+        fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=15&page=' + pageNumber)
             .then((response) => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
@@ -24,6 +32,7 @@ const PhotoGallery = () => {
     }, [pageNumber]);
     return (
         <Box>
+            <UploadPictures/>
 
             <Grid container
                 spacing={{ xs: 1, md: 4 }}
@@ -37,9 +46,9 @@ const PhotoGallery = () => {
                 ))}
             </Grid>
             <Box>
-                <button>-</button>
-                <Typography></Typography>
-                <button>+</button>
+                <Button onClick={decreasePageNumber} disabled={pageNumber === 0} variant="contained" component="a">-</Button>
+                <Typography>Page: {pageNumber + 1}</Typography>
+                <Button onClick={increasePageNumber} variant="contained" component="a">+</Button>
             </Box>
         </Box>
     )
