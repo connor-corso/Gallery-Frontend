@@ -47,7 +47,7 @@ const PhotoGallery = () => {
                 alignItems="center"
             >
                 {photoInfos.map((photoInfo) => (
-                    <Grid item key={photoInfo.photo_id} xs={12} sm={6} md={4} lg={2}>
+                    <Grid item key={photoInfo.photo_id} xs={12} sm={6} md={4} lg={3} xl={2}>
                         <PhotoCard photoInfo={photoInfo} key={photoInfo.photo_id} />
                     </Grid>
                 ))}
