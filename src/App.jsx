@@ -1,12 +1,13 @@
 import * as React from 'react';
 
 import PhotoGallery from './components/PhotoGallery';
+import Grid from '@mui/material/Unstable_Grid2';
 
 function App() {
   return (
-    <div>
+    <Grid>
       <PhotoGallery />
-    </div>
+    </Grid>
   )
 }
 
