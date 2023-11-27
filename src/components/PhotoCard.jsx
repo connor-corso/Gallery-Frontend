@@ -4,6 +4,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import IconButton from '@mui/material/IconButton';
+import Skeleton from '@mui/material/Skeleton';
 
 const Photo = ({ photoInfo, getPhoto}) => {
     const [imageUrl, setImageUrl] = useState('');
@@ -14,9 +15,9 @@ const Photo = ({ photoInfo, getPhoto}) => {
             try {
                 const photoDetails = await getPhoto(photoInfo);
                 if (!photoDetails){
-                    throw new Error("photoDetails not found")
+                    throw new Error("photoDetails not found");
                 }
-                const objectURL = await photoDetails.photoData
+                const objectURL = await photoDetails.photoData;
                 
                 if (objectURL){
                     setImageUrl(objectURL);
@@ -68,7 +69,8 @@ const Photo = ({ photoInfo, getPhoto}) => {
                     */}
 
                 </>)
-                : <p>Loading image...</p>}
+                : <Skeleton variant='rectangular' width="100%" height="300px" />}
+                
 
         </Box>
     )
