@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { ThemeProvider, createTheme } from '@mui/material/styles';
 import {
   BrowserRouter as Router,
   Route,
@@ -13,8 +14,15 @@ import Grid from '@mui/material/Unstable_Grid2';
 import NavBar from './components/NavBar';
 import UploadPictures from './components/UploadForm';
 
+const theme = createTheme({
+  direction: 'rtl',
+  // other theme properties
+});
+
 function App() {
   return (
+    <ThemeProvider theme={theme}>
+
     <Router>
       <NavBar />
       <Routes>
@@ -28,6 +36,7 @@ function App() {
       </Routes>
     </Router>
     
+    </ThemeProvider>
   )
 }
 
