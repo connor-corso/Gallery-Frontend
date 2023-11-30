@@ -15,33 +15,73 @@ const NavBar = () => {
     return (
         <Box>
             <Grid container spacing={3}>
-                <Grid>
-                    <Link to="/">
-                    <HomeIcon />
-                    </Link>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center" >
+                    <img src="motionphotosextractoricon.png" height="auto" width="100%" />
                 </Grid>
-                <Grid>
-                    <Link to="/upload">
-                    <CloudUploadIcon />
-                    </Link>
-                </Grid>
-                <Grid>
-                <Link to="/galleries">
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{
+                        width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center", '&:hover': {
+                            backgroundColor: 'lightgray'
+                        }
+                    }}>
 
-                    <CollectionsIcon />
-                </Link>
-                </Grid>
-                <Grid>
-                <Link to="/favorites">
+                        <Link to="/" style={{ width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center" }}>
 
-                    <FavoriteIcon />
-                </Link>
-                </Grid>
-                <Grid>
-                <Link to="/settings">
-                    <SettingsIcon />
+                            <HomeIcon color="primary"/>
 
-                </Link>
+                        </Link>
+                    </Box>
+                </Grid>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{
+                        width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center", '&:hover': {
+                            backgroundColor: 'lightgray'
+                        }
+                    }}>
+
+                        <Link to="/upload" style={{ width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center" }}>
+                            <CloudUploadIcon color="primary"/>
+                        </Link>
+                    </Box>
+                </Grid>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{
+                        width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center", '&:hover': {
+                            backgroundColor: 'lightgray'
+                        }
+                    }}>
+
+                        <Link to="/galleries">
+
+                            <CollectionsIcon color="primary"/>
+                        </Link>
+                    </Box>
+                </Grid>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{
+                        width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center", '&:hover': {
+                            backgroundColor: 'lightgray'
+                        }
+                    }}>
+
+                        <Link to="/favorites">
+
+                            <FavoriteIcon color="primary"/>
+                        </Link>
+                    </Box>
+                </Grid>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
+                    <Box sx={{
+                        width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center", '&:hover': {
+                            backgroundColor: 'lightgray'
+                        }
+                    }}>
+
+                        <Link to="/settings">
+                            <SettingsIcon color="primary"/>
+
+                        </Link>
+                    </Box>
                 </Grid>
             </Grid>
         </Box>
