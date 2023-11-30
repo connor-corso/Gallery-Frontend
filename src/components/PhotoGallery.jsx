@@ -5,6 +5,8 @@ import UploadPictures from './UploadForm';
 import Box from '@mui/material/Box';
 import PageSelector from './PageSelector';
 
+
+
 const photosReducer = (state, action) => {
     //console.log("Current State: ", state)
     //console.log("Current Action: ", action)
