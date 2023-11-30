@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Typography, Grid, Button } from '@mui/material';
+import { Typography, Grid, Button } from '@mui/material';
 import PhotoCard from './PhotoCard';
 import UploadPictures from './UploadForm';
+import Box from '@mui/material/Box';
+import PageSelector from './PageSelector';
 
 const photosReducer = (state, action) => {
     //console.log("Current State: ", state)
@@ -22,7 +24,7 @@ const photosReducer = (state, action) => {
                     errorMessage: null
                 }
             };
-        
+
         // This takes a payload.id and a payload.image and stores the payload.image
         case 'PHOTOS_ADD_IMAGE_SUCCESS':
             newState = {
@@ -34,9 +36,9 @@ const photosReducer = (state, action) => {
                     errorMessage: null
                 }
             };
-            
+
             return newState
-        
+
         // This sets the isloading to false and isError to true on an error loading a photo
         case 'PHOTOS_ADD_IMAGE_FAILURE':
             return {
@@ -50,7 +52,7 @@ const photosReducer = (state, action) => {
             }
         // This takes a payload.id and a payload.image and wipes out the old image and throws a new one in its spot
         case 'PHOTOS_UPDATE_IMAGE':
-           return {
+            return {
                 ...state,
                 [action.payload.photoInfo.photo_id]: {
                     isLoading: false,
@@ -61,7 +63,7 @@ const photosReducer = (state, action) => {
             };
         case 'PHOTOS_REMOVE_IMAGE':
             newState = { ...state };
-            if (newState[action.payload.photoInfo.photo_id]){
+            if (newState[action.payload.photoInfo.photo_id]) {
                 URL.revokeObjectURL(newState[action.payload.photoInfo.photo_id])
             }
             delete newState[action.payload.photoInfo.photo_id];
@@ -81,6 +83,9 @@ const photosReducer = (state, action) => {
                 // replace the photoInfos that are there with new ones to make it easier to render only the images in that page
                 photoInfos: action.payload.photo_infos
             }
+        
+        default: 
+            return state;
     }
 }
 
@@ -96,18 +101,18 @@ const fetchPhoto = async (photosState, photoInfo, dispatchPhotos) => {
     try {
         const response = await fetch("https://gallery-backend.ccorso.ca/get-thumbnail-by-id/" + photoInfo.photo_id + "/")
         if (!response.ok) {
-            dispatchPhotos({type: 'PHOTOS_ADD_IMAGE_FAILURE', payload: {photoInfo: photoInfo}})
+            dispatchPhotos({ type: 'PHOTOS_ADD_IMAGE_FAILURE', payload: { photoInfo: photoInfo } })
             throw new Error('Request failed, response was not ok')
         }
         const blob = await response.blob();
         const objectURL = URL.createObjectURL(blob);
-        
+
         //dispatchPhotos does not instantly add the photo to the photosState so we should just return what would be there, it will work correctly on updating the component
-        dispatchPhotos({type: 'PHOTOS_ADD_IMAGE_SUCCESS', payload: {photoInfo: photoInfo, photoData:objectURL}})
-        
-        return {isLoading: false, hasError: false, photoData: objectURL, errorMessage: null};
-        
-        
+        dispatchPhotos({ type: 'PHOTOS_ADD_IMAGE_SUCCESS', payload: { photoInfo: photoInfo, photoData: objectURL } })
+
+        return { isLoading: false, hasError: false, photoData: objectURL, errorMessage: null };
+
+
     }
     catch (error) {
         console.error('Image with id: %d failed to load', photoInfo.photo_id);
@@ -135,37 +140,37 @@ const PhotoGallery = () => {
     );
 
     const increasePageNumber = () => {
-        dispatchPhotos({ type: 'SET_PAGE', payload: {pageNumber: photosState.pageNumber + 1 }})
+        dispatchPhotos({ type: 'SET_PAGE', payload: { pageNumber: photosState.pageNumber + 1 } })
     }
     const decreasePageNumber = () => {
-        dispatchPhotos({ type: 'SET_PAGE', payload: {pageNumber: Math.max(photosState.pageNumber - 1, 0) }})
+        dispatchPhotos({ type: 'SET_PAGE', payload: { pageNumber: Math.max(photosState.pageNumber - 1, 0) } })
     }
 
 
     const getPhoto = async (photoInfo) => {
         let photoDetails = {}
-        if (photosState.hasOwnProperty(photoInfo.photo_id)){
+        if (photosState.hasOwnProperty(photoInfo.photo_id)) {
             photoDetails = photosState[photoInfo.photo_id];
 
         }
         else {
-            photoDetails = await fetchPhoto(photosState,photoInfo,dispatchPhotos);
+            photoDetails = await fetchPhoto(photosState, photoInfo, dispatchPhotos);
         }
-        
+
         return photoDetails;
     }
     useEffect(() => {
         const loadPhotoInfos = async () => {
             try {
-                //const response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=1&page=' + photosState.pageNumber);
+                //const response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=1&page=' + photosState.pageNumber); //for debugging use this line to only load one picture at a time
                 const response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=24&page=' + photosState.pageNumber);
-                
+
                 if (!response.ok) {
                     throw new Error("Failed to load a page of photo infos")
                 }
                 const responseJson = await response.json();
-                
-                dispatchPhotos({ type: 'PHOTO_INFOS_FETCH_SUCCESS', payload: {photo_infos: responseJson }})
+
+                dispatchPhotos({ type: 'PHOTO_INFOS_FETCH_SUCCESS', payload: { photo_infos: responseJson } })
             }
             catch (error) {
                 //dispatchPhotos({ type: 'PHOTO_INFOS_FETCH_FAILURE' })
@@ -176,15 +181,19 @@ const PhotoGallery = () => {
         }
         loadPhotoInfos();
     }, [photosState.pageNumber]);
-    return (
-        <Box>
-            <UploadPictures/>
 
-            <Box>
-                <Button onClick={decreasePageNumber} disabled={photosState.pageNumber === 0} variant="contained" component="a">-</Button>
-                <Typography>Page: {photosState.pageNumber + 1}</Typography>
-                <Button onClick={increasePageNumber} variant="contained" component="a">+</Button>
-            </Box>
+    return (
+        <Grid container
+            spacing={0}
+            justifyContent="center"
+            alignItems="center"
+            flexDirection="column"
+            rowGap={2}
+        >
+            
+
+            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} />
+            
 
             <Grid container
                 spacing={1}
@@ -193,16 +202,17 @@ const PhotoGallery = () => {
             >
                 {photosState.photoInfos.map((photoInfo) => (
                     <Grid item key={photoInfo.photo_id} xs={6} sm={6} md={4} lg={3} xl={2}>
-                        <PhotoCard 
-                          photoInfo={photoInfo}
-                          key={photoInfo.photo_id}
-                          photosState={photosState}
-                          getPhoto={getPhoto}
-                          />
+                        <PhotoCard
+                            photoInfo={photoInfo}
+                            key={photoInfo.photo_id}
+                            photosState={photosState}
+                            getPhoto={getPhoto}
+                        />
                     </Grid>
                 ))}
             </Grid>
-        </Box>
+            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} />
+        </Grid>
     )
 }
 
