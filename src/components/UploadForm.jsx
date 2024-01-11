@@ -61,17 +61,10 @@ const photoUploadReducer = (state, action) => {
                 uploading: false
             };
 
-        case 'CLEAR_SUCCESSFUL_UPLOADS':
-            return {state}
-            //return {
-            //    ...state,
-            //    files: state.files.filter(file => file.status !== 'success')
-            //};
-
-        case 'CLEAR_FAILED_UPLOADS':
+        case 'CLEAR_UPLOADS':
             return {
                 ...state,
-                files: state.files.filter(file => file.status !== 'error')
+                files: []
             }
 
         default:
@@ -94,12 +87,20 @@ const UploadPictures = () => {
         dispatchUploadPictures({ type: 'START_UPLOAD', files: filesWithStatus });
     };
 
-    const handleRemoveFailedUploads = () => {
-        dispatchUploadPictures({ type: 'CLEAR_FAILED_UPLOADS' });
+    const handleRemoveUploads = () => {
+        dispatchUploadPictures({ type: 'CLEAR_UPLOADS' });
+    };
+
+    const handleRetryUpload = async ({file, index}) => {
+        //console.log(file)
+        //console.log(index)
+        
+        await uploadFile({file: state.file[index].file, index})
     };
 
     //function that handles uploading one file
-    const uploadFile = async ({ file, index }) => {
+    const uploadFile = async ({file, index}) => {
+        console.log(file)
         dispatchUploadPictures({ type: 'UPDATE_PROGRESS', index: index, status: "Beginning upload" })
         
         const formData = new FormData();
@@ -166,10 +167,10 @@ const UploadPictures = () => {
                 <Button variant="contained" onClick={handleUpload}>Upload</Button>
             </Grid>
             <Grid>
-                <Button variant="contained" onClick={handleRemoveFailedUploads}>Clear failed uploads</Button>
+                <Button variant="contained" onClick={handleRemoveUploads}>Clear uploads</Button>
             </Grid>
             <Grid>
-                <UploadingPhotoTable files={state.files} />
+                <UploadingPhotoTable files={state.files} handleRetryUpload={handleRetryUpload} />
             </Grid>
         </Grid>
     );

@@ -1,8 +1,8 @@
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper } from '@mui/material'
+import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, Button } from '@mui/material'
 
-const UploadingPhotoTable = ({ files }) => {
+const UploadingPhotoTable = ({ files, handleRetryUpload }) => {
     //console.log("changing")
-    //console.log(files)
+
     return (
         <TableContainer component={Paper}>
             <Table sx={{ minWidth: 650 }} aria-label="uploading photo status">
@@ -28,6 +28,9 @@ const UploadingPhotoTable = ({ files }) => {
                                 </TableCell>
                                 <TableCell component="th" scope="row">
                                     {file.status}
+                                </TableCell>
+                                <TableCell>
+                                    {file.status == "error" ? (<Button variant="contained" onClick={ () => handleRetryUpload({file:file, index:index})}>Retry</Button>) : ""}
                                 </TableCell>
                             </TableRow>
                         )
