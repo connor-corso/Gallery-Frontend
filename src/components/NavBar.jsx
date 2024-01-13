@@ -14,9 +14,9 @@ import { Link } from 'react-router-dom';
 const NavBar = () => {
     return (
         <Box>
-            <Grid container spacing={3}>
-                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center" >
-                    <img src="motionphotosextractoricon.png" height="auto" width="100%" />
+            <Grid container spacing={5}>
+                <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center" sx={{paddingLeft:6, paddingRight:4}}>
+                    <img src="motionphotosextractoricon.png" height="auto" width="60px"/>
                 </Grid>
                 <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
                     <Box sx={{
