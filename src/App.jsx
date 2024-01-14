@@ -27,9 +27,11 @@ function App() {
       <NavBar />
       <Routes>
 
-        <Route path="/" element={<PhotoGallery />} />
+        <Route path="/" element={<PhotoGallery favorite={false}/>} />
     
         <Route path="/upload" element={<UploadPictures />} />
+
+        <Route path="/favorites" element={<PhotoGallery favorite={true} />} />
     
         <Route path="*" element={<Navigate to="/" />} />
 

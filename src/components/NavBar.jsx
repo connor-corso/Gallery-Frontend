@@ -25,11 +25,12 @@ const NavBar = () => {
                         }
                     }}>
 
-                        <Link to="/" style={{ width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center" }}>
-
+                            <a href="/" style={{ width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center" }}>
                             <HomeIcon color="primary" />
 
-                        </Link>
+                            </a>
+
+                        
                     </Box>
                 </Grid>
                 <Grid xs={0.5} display="flex" justifyContent="center" alignItems="center">
@@ -51,10 +52,10 @@ const NavBar = () => {
                         }
                     }}>
 
-                        <Link to="/favorites">
-
+                        <a href="/favorites" style={{ width: '100%', height: '100%', display: 'flex', justifyContent: "center", alignItems: "center" }}>
                             <FavoriteIcon color="primary" />
-                        </Link>
+
+                        </a>
                     </Box>
                 </Grid>
 

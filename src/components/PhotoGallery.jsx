@@ -122,6 +122,7 @@ const fetchPhoto = async (photosState, photoInfo, dispatchPhotos) => {
     }
 };
 
+
 // Looks in the photosState to see if the image has already been downloaded and if so returns that, otherwise it fetches the photo from the api
 //const getPhoto = async (photosState, photoInfo) => {
 //    if (photosState.hasOwnProperty(photoInfo.photo_id)){
@@ -130,7 +131,59 @@ const fetchPhoto = async (photosState, photoInfo, dispatchPhotos) => {
 //    return fetchPhoto(photosState, photoInfo);
 //};
 
-const PhotoGallery = () => {
+const PhotoGallery = (favorite) => {
+    const [selectedPhotos, setSelectedPhotos] = useState([]);
+    const handleSelectionChange = (photoId, isSelected) => {
+        setSelectedPhotos(prev => {
+            if (isSelected) {
+                return [...prev, photoId];
+            }
+            else {
+                return prev.filter(id => id !== photoId);
+            }
+        });
+    };
+
+    async function makeBackendRequest(path, photo_id, method = "POST") {
+        console.log(path)
+        console.log(photo_id)
+        
+        
+        try {
+            console.log(photo_id)
+            let endpoint = path + photo_id + "/"
+            console.log(endpoint)
+            const response = await fetch(endpoint,
+            {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+            });
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            console.log("made request")
+        }
+        catch (error) {
+            console.error('Failed to mark photos with these ids as a favorite', selectedPhotos)
+            console.error(error)
+        }
+    }
+    async function favoritePhotos(){
+        console.log(selectedPhotos)
+        selectedPhotos.map( photo_id => {
+            makeBackendRequest("https://gallery-backend.ccorso.ca/toggle-favorite/", photo_id,)
+        })
+    }
+
+    async function reprocessPhotos() {
+        console.log(selectedPhotos)
+        selectedPhotos.map( photo_id => {
+            makeBackendRequest("https://gallery-backend.ccorso.ca/reprocess-photo-by-id/", photo_id, "PUT")
+        })
+    }
+
     const initialState = {
         photoInfos: [],
         pageNumber: 0,
@@ -165,7 +218,14 @@ const PhotoGallery = () => {
         const loadPhotoInfos = async () => {
             try {
                 //const response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=1&page=' + photosState.pageNumber); //for debugging use this line to only load one picture at a time
-                const response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=24&page=' + photosState.pageNumber);
+                let response;
+                console.log(favorite.favorite)
+                if (favorite.favorite == true) {
+                    response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?favorite=1&page_size=24&page=' + photosState.pageNumber);
+                }
+                else {
+                    response = await fetch('https://gallery-backend.ccorso.ca/get-photo-info-paginated/?page_size=24&page=' + photosState.pageNumber);
+                }
 
                 if (!response.ok) {
                     throw new Error("Failed to load a page of photo infos")
@@ -194,7 +254,7 @@ const PhotoGallery = () => {
         >
             
 
-            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} />
+            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} direction="column" toggleFavoritePhotos={favoritePhotos} toggleReprocessPhotos={reprocessPhotos}/>
             
 
             <Grid container
@@ -209,11 +269,12 @@ const PhotoGallery = () => {
                             key={photoInfo.photo_id}
                             photosState={photosState}
                             getPhoto={getPhoto}
+                            onSelectionChange={handleSelectionChange}
                         />
                     </Grid>
                 ))}
             </Grid>
-            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} />
+            <PageSelector increasePageNumber={increasePageNumber} decreasePageNumber={decreasePageNumber} pageNumber={photosState.pageNumber} direction="column-reverse" toggleFavoritePhotos={favoritePhotos} toggleReprocessPhotos={reprocessPhotos}/>
         </Grid>
     )
 }

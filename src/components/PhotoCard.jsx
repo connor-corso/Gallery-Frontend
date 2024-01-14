@@ -6,13 +6,19 @@ import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import IconButton from '@mui/material/IconButton';
 import Skeleton from '@mui/material/Skeleton';
 import PlayCircleIcon from '@mui/icons-material/PlayCircle';
+import Checkbox from '@mui/material/Checkbox';
 
-
-const Photo = ({ photoInfo, getPhoto}) => {
+const Photo = ({ photoInfo, getPhoto, onSelectionChange}) => {
     const [imageUrl, setImageUrl] = useState('');
     const [nowPlaying, setNowPlaying] = useState(1);
     //const [videoUrl, setVideoUrl] = useState('');
     const videoRef = useRef(null);
+    const [isSelected, setIsSelected] = useState(false);
+    const toggleSelection = (event) => {
+        const newSelectionState = event.target.checked;
+        setIsSelected(newSelectionState);
+        onSelectionChange(photoInfo.photo_id, newSelectionState);
+    }
 
     const togglePlaying = () => {
         if (!nowPlaying && videoRef.current){
@@ -44,22 +50,7 @@ const Photo = ({ photoInfo, getPhoto}) => {
             }
 
         }
-        //const loadVideo = async () => {
-        //    try {
-        //        if (photoInfo.motion_photo){
-        //            const objectURL = await photodetails
-        //        }
-        //        else {
-        //            return
-        //        }
-        //    }
-        //    catch (error) {
-        //        console.error(`Video with id: %d failed to load`, photoInfo.photo_id);
-        //        console.error("Error:", error);
-        //    }
-        //}
         loadImage();
-        //loadVideo();
 
     }, []);
 
@@ -73,7 +64,7 @@ const Photo = ({ photoInfo, getPhoto}) => {
                     </video>)}
                     
 
-                    <Box sx={{ position: 'absolute', top: 0, right: 0 }}>
+                    {/*<Box sx={{ position: 'absolute', top: 0, right: 0 }}>
                         <a href={"https://gallery-backend.ccorso.ca/get-photo-by-id/" + photoInfo.photo_id + "/"} download={photoInfo.photo_title} target="_blank" rel="noopener noreferrer">
 
                             <IconButton
@@ -85,15 +76,20 @@ const Photo = ({ photoInfo, getPhoto}) => {
 
                             </IconButton>
                         </a>
-                    </Box>
+                    </Box> */}
 
                     {photoInfo.motion_photo ? (<IconButton sx={{position: 'absolute', top:0, left: 0}} onClick={togglePlaying}>
                         <PlayCircleIcon
                             aria-label="play motion photo"
-                            sx={{mt:"8px", ml: "8px"}}
+                            
                         ></PlayCircleIcon>
                     </IconButton>)
                     :(<></>)}
+
+                    <Checkbox 
+                        sx={{position: 'absolute', top:0, right: 0}}
+                        onChange={toggleSelection}
+                    />
                     
 
                     {/*Comment out the below until we get likes working */}
@@ -118,9 +114,9 @@ const Photo = ({ photoInfo, getPhoto}) => {
 
 };
 
-const PhotoCard = ({ photoInfo, getPhoto}) => (
+const PhotoCard = ({ photoInfo, getPhoto, onSelectionChange}) => (
     <Box>
-        <Photo photoInfo={photoInfo} getPhoto={getPhoto} />
+        <Photo photoInfo={photoInfo} getPhoto={getPhoto} onSelectionChange={onSelectionChange}/>
 
     </Box>
 )
